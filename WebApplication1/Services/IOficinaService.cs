@@ -1,12 +1,15 @@
 ﻿using System.Collections.Generic;
 using SpartaOficinas.Entities;
-using SpartaOficinas.Models.Oficinas;
+using SpartaOficinas.Models;
 
 namespace SpartaOficinas.Services
 {
     public interface IOficinaService
     {
         IEnumerable<Oficina> GetAll();
-        void Create(Create model);
+
+        void Create(OficinaDto model);
+
+        Oficina GetLoginAccess(LoginDto model);
     }
 }

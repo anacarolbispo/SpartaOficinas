@@ -4,14 +4,13 @@ namespace SpartaOficinas.Entities
 {
     public class Oficina
     {
-        public int id { get; set; }
-        public string razaoSocial { get; set; }
-        public string cnpj { get; set; }
-        public bool status { get; set; }
-        public int cargaTrabalho { get; set; }
+        public int Id { get; set; }
+        public string RazaoSocial { get; set; }
+        public string Cnpj { get; set; }
+        public int CargaTrabalho { get; set; }
 
         [JsonIgnore]
-        public string senha { get; set; }
+        public string Senha { get; set; }
 
     }
 }

@@ -20,6 +20,8 @@ namespace SpartaOficinas.Helpers
         }
 
         public DbSet<Oficina> Oficinas { get; set; }
+
+        public DbSet<Agendamento> Agendamentos { get; set; }
     }
 
 }

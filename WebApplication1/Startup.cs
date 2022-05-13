@@ -1,12 +1,13 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SpartaOficinas.Helpers;
 using SpartaOficinas.Services;
-using Swashbuckle.AspNetCore.Swagger;
-using System;
+using System.Text;
 
 namespace SpartaOficinas
 {
@@ -32,6 +33,14 @@ namespace SpartaOficinas
                     Version = "v1",
                     Title = "Avaliação Técnica .NET Core - SpartaLabs",
                 });
+                options.AddSecurityDefinition(name: "Bearer", securityScheme: new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    Description = "Enter the Bearer Authorization string as following: `Bearer Generated-JWT-Token`",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
+                });
             });
 
             var config = new MapperConfiguration(cfg =>
@@ -43,7 +52,26 @@ namespace SpartaOficinas
             services.AddSingleton(mapper);
 
             services.AddScoped<IOficinaService, OficinaService>();
+            services.AddScoped<IAgendamentoService, AgendamentoService>();
 
+            var key = Encoding.ASCII.GetBytes(Settings.Secret);
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+                .AddJwtBearer(x =>
+                {
+                    x.RequireHttpsMetadata = false;
+                    x.SaveToken = true;
+                    x.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(key),
+                        ValidateIssuer = false,
+                        ValidateAudience = false
+                    };
+                }); 
         }
 
         public void Configure(IApplicationBuilder app)
@@ -59,6 +87,7 @@ namespace SpartaOficinas
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

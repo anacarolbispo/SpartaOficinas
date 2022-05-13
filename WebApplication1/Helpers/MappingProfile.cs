@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using SpartaOficinas.Entities;
-using SpartaOficinas.Models.Oficinas;
+using SpartaOficinas.Models;
 
 namespace SpartaOficinas.Helpers
 {
@@ -8,7 +8,9 @@ namespace SpartaOficinas.Helpers
     {
         public MappingProfile()
         {
-            CreateMap<Create, Oficina>();
+            CreateMap<OficinaDto, Oficina>();
+            CreateMap<Oficina, OficinaDto>();
+            CreateMap<AgendamentoDto, Agendamento>();
         }
     }
 }
